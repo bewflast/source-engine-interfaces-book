@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.18)
 project(ifaces_book LANGUAGES CXX)
 
 set(CMAKE_CONFIGURATION_TYPES Release Debug)
