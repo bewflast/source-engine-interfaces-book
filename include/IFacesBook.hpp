@@ -8,7 +8,6 @@
 class IFacesBook final
 {
 
-public:
     using BookType = std::unordered_map<std::string, void*>;
 
 private:
