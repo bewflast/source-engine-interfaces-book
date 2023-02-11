@@ -6,12 +6,12 @@ IFacesBook::IFacesBook( void )
 :
     _book { std::make_unique<IFacesBook::BookType>() }
 {
-    std::unique_ptr<const libsList>    modules(getSharedLibsNames());
+    std::unique_ptr<const libsList>    modules { getSharedLibsNames() };
 
     if (!modules)
         return ;
 
-    for (auto moduleName : *modules)
+    for (std::string_view moduleName : *modules)
     {
 
         if ( (moduleName.find("steamclient") != moduleName.npos) || (moduleName.find("vstdlib_s") != moduleName.npos) )

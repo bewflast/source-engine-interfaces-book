@@ -32,6 +32,6 @@ using   libsList = std::list<std::string>;
 
 uintptr_t                       getCreateInterface_addr (   std::string_view moduleName     );
 uintptr_t                       get_s_InterfaceRegs_addr(   uintptr_t CreateInterfaceLoc    );
-std::unique_ptr<const libsList> getSharedLibsNames();
+std::unique_ptr<const libsList> getSharedLibsNames( void );
 
 #endif

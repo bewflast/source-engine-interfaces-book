@@ -1,6 +1,6 @@
 #include "utils.hpp"
 
-static void getSharedLibName(const SharedLib* lib, std::span<char>	buffer)
+static void getSharedLibName( const SharedLib* lib, std::span<char>	buffer )
 {
 
 # ifdef _WIN32
@@ -12,7 +12,7 @@ static void getSharedLibName(const SharedLib* lib, std::span<char>	buffer)
 
 };
 
-static std::string trimSharedLibName(const SharedLib* lib)
+static std::string trimSharedLibName( const SharedLib* lib )
 {
 
 	static std::size_t             	subFrom 	{ 0     };
@@ -29,11 +29,11 @@ static std::string trimSharedLibName(const SharedLib* lib)
 };
 
 #ifdef __linux__
-    static int  addLibName(SharedLib* lib, std::size_t size, void* data)
+    static int  addLibName( SharedLib* lib, std::size_t size, void* data )
     {
         static_cast<libsList*>(data)->push_back(trimSharedLibName(lib));
 
-        return(0);
+        return( 0 );
     }
 #endif
 
@@ -65,12 +65,12 @@ static  void*   GetModHandle( std::string_view& moduleName )
 	hMod = GET_LIB_HANDLE(moduleName.data());
 
     if (!hMod)
-        return (nullptr);
+        return ( nullptr );
     
     return ( static_cast<void*>(hMod) );
 }
 
-static uintptr_t    getExportedCreateInterfaceAddr(ModuleHandle hmod)
+static uintptr_t    getExportedCreateInterfaceAddr( ModuleHandle hmod )
 {
     uintptr_t       exportedCreateInterfaceAddr { reinterpret_cast<uintptr_t>(GET_SYM_ADDR(hmod, "CreateInterface")) };
 
@@ -80,11 +80,7 @@ static uintptr_t    getExportedCreateInterfaceAddr(ModuleHandle hmod)
 
 
 
-
-
-
-
-std::unique_ptr<const libsList>   getSharedLibsNames()
+std::unique_ptr<const libsList>   getSharedLibsNames( void )
 {
 
     std::unique_ptr<libsList>   result = std::make_unique<libsList>();
@@ -99,8 +95,8 @@ std::unique_ptr<const libsList>   getSharedLibsNames()
 uintptr_t   getCreateInterface_addr( std::string_view moduleName )
 {
 
-    ModuleHandle    hMod(nullptr);
-    uintptr_t       exportedCreateInterfaceAddr(0);
+    uintptr_t       exportedCreateInterfaceAddr { 0 };
+    ModuleHandle    hMod                        { nullptr };
 
     hMod = static_cast<ModuleHandle>(GetModHandle( moduleName ));
     
@@ -128,8 +124,8 @@ uintptr_t   get_s_InterfaceRegs_addr( uintptr_t CreateInterfaceLoc )
 
 # else
 
-    int32_t     jmpOffset           = *reinterpret_cast<int32_t*>(CreateInterfaceLoc + 5); 
-    uintptr_t   s_pInterfaceRegs    = *reinterpret_cast<int32_t*>(CreateInterfaceLoc + 9 + jmpOffset + OFFSET_TO_MOV_BEGINNING + 2);
+    int32_t     jmpOffset                       { *reinterpret_cast<int32_t*>   (CreateInterfaceLoc + 5)                                            }; 
+    uintptr_t   s_pInterfaceRegs                { *reinterpret_cast<uintptr_t*> (CreateInterfaceLoc + 9 + jmpOffset + OFFSET_TO_MOV_BEGINNING + 2)  };
 
 #endif
 
