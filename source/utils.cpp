@@ -53,7 +53,7 @@ static void    iterateThroughLoadedLibs( std::unique_ptr<libsList>& libsNamesLis
     EnumProcessModules(curProcess, modules.data(), sizeof(modules), &modulesCount);
 
 	for (const auto& module : modules)
-		libsNamesList->push_back(trimSharedLibName(&module));
+		libsNamesList->emplace_back(std::move(trimSharedLibName(&module)));
 
 # endif 
 };
