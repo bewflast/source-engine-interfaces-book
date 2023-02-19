@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include "SE_SDK.hpp"
+#include "interfaces.hpp"
 #include "IFacesBook.hpp"
 
 IFacesBook::IFacesBook( void )
@@ -14,7 +15,7 @@ IFacesBook::IFacesBook( void )
 	for (std::string_view moduleName : *modules)
 	{
 
-		if ( (moduleName.find("steamclient") != moduleName.npos) || (moduleName.find("vstdlib_s") != moduleName.npos) )
+		if ( (moduleName.find("steamclient") != std::string_view::npos) || (moduleName.find("vstdlib_s") != std::string_view::npos) )
 			continue;
 
 		uintptr_t   createInterfaceLoc      { getCreateInterface_addr(moduleName) };
@@ -26,8 +27,17 @@ IFacesBook::IFacesBook( void )
 		InterfaceReg*   interfaceList       { reinterpret_cast<InterfaceReg*>(*reinterpret_cast<uintptr_t*>(s_pInterfaceRegs)) };
 
 		for (; interfaceList; interfaceList = interfaceList->m_pNext)
-			if (!this->hasInterface(interfaceList->m_pName))
-				this->_book->emplace(interfaceList->m_pName, interfaceList->m_CreateFn());
+		{
+			for (const auto& elem : interfacesMap)
+			{
+				if (!elem.second.contains(interfaceList->m_pName))
+					continue;
+				this->_book->emplace(	(!this->hasInterface(elem.first.c_str())		\
+											? elem.first.c_str()						\
+											: interfaceList->m_pName),
+										interfaceList->m_CreateFn());
+			}
+		}
 
 	}
 

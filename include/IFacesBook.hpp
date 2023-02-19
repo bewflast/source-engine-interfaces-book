@@ -3,6 +3,7 @@
 
 # include   <string>
 # include   <memory>
+# include	<algorithm>
 # include   <unordered_map>
 
 class IFacesBook final
@@ -17,22 +18,31 @@ class IFacesBook final
 
 private:
     std::unique_ptr<BookType>   _book;
-    bool    hasInterface( const char* interfaceName ) const;
 
 public:
     IFacesBook();
 
-    void*   operator[]( const char* interfaceName ) const;
+    void*   operator[]( const char* interfaceName ) 	const;
+	bool    hasInterface( const char* interfaceName )	const;
 
     template<typename T>
-	T* getInterface( const char*	interfaceName ) const;
+	T* getInterface() const;
 
 };
 
 template<typename T>
-T* IFacesBook::getInterface( const char*	interfaceName ) const
+T* IFacesBook::getInterface() const
 {
-    return ( reinterpret_cast<T*>((*this)[interfaceName]) );
+	std::string 	interfaceTypeIDFull { typeid(T).name() };
+	std::string 	interfaceType		(interfaceTypeIDFull.begin() + 6, interfaceTypeIDFull.end());
+
+	std::transform(interfaceType.begin(), interfaceType.end(), interfaceType.begin(),
+				   [](unsigned char c) -> int
+				   {
+						return ( std::tolower(c) );
+				   });
+
+    return ( reinterpret_cast<T*>((*this)[interfaceType.c_str()]) );
 };
 
 #endif
