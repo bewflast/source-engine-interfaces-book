@@ -3,7 +3,7 @@ Tiny tool for making accessing Source Engine's interfaces simpler
 
 This project was based on the idea of [iterating over interfaces](https://aixxe.net/2017/03/walking-interface-list) of Source Engine.
 
-You no longer need to guess about which shared library contains target interface.
+You no longer need to guess about which shared library contains target interface and care about its version.
 
 # Usage
 
