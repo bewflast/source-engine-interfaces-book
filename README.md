@@ -1,4 +1,4 @@
-# gmod-interfaces-book
+# source-engine-interfaces-book
 Tiny tool for making accessing Source Engine's interfaces simpler
 
 This project was based on the idea of [iterating over interfaces](https://aixxe.net/2017/03/walking-interface-list) of Source Engine.
