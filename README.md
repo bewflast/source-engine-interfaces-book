@@ -16,7 +16,13 @@ The only thing you need to do is to make object of `IFacesBook` and get access t
 ```cpp
   IFacesBook  interfaces;
   
-  INetworkStringTableContainer* stringTables = interfaces.getInterface<INetworkStringTableContainer>("VEngineServerStringTable001");
-  // or
-  //INetworkStringTableContainer* stringTables = static_cast<INetworkStringTableContainer*>(interfaces["VEngineServerStringTable001"]);
+  ICvar* ICvarInterface = interfaces.getInterface<ICvar>();
+  
+  // NOTE: there are some interfaces that have two different versions on client and server side
+  // so you should check how target interface is stored
+  // EXAMPLE:
+  
+  INetworkStringTableContainer* stringTables_Client { interfaces.getInterface<INetworkStringTableContainer>() };
+  if (interfaces.hasInterface("VEngineClientStringTable001"))
+    stringTablesClient = static_cast<INetworkStringTableContainer*>(interfaces["VEngineClientStringTable001"]);
 ```
