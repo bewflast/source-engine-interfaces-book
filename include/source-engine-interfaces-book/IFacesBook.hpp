@@ -3,6 +3,7 @@
 
 # include   <string>
 # include	<algorithm>
+# include 	<typeinfo>
 # include   <unordered_map>
 
 class IFacesBook final
@@ -33,7 +34,7 @@ auto IFacesBook::getInterface() const -> T*
 {
 	const std::string 	interfaceTypeIDFull { typeid(T).name() };
 	constexpr std::string_view stringToSub {"class "};
-	std::string interfaceType {interfaceTypeIDFull.substr(stringToSub.length() + 1)};
+	std::string interfaceType {interfaceTypeIDFull.substr(stringToSub.length())};
 
 	std::transform(interfaceType.begin(), interfaceType.end(), interfaceType.begin(),
 				   [](unsigned char letter) -> int
