@@ -7,9 +7,9 @@ You no longer need to guess about which shared library contains target interface
 
 # Usage
 
-**It works fine only for both Window x86 and x86_64  and also Linux x86 !! SRCDS !!**
+**It works fine only for both Windows and Linux x86/x86-64 !! SRCDS !!**
 
-I haven't explored the client binaries yet, but they are coming soon (so do Linux x86_64 SRCDS support)
+I haven't explored the client binaries yet, but they are coming soon
 
 The only thing you need to do is to make object of `IFacesBook` and get access to target interface through `getInterface` method or overloaded `[]` operator:
 
