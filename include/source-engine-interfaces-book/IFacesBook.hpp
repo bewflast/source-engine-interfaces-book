@@ -22,7 +22,7 @@ public:
     template<typename T>
 	auto getInterface() const -> T*;
 
-
+private:
 	using BookType = std::unordered_map<std::string, void*>;
 	BookType   _book{};
 
