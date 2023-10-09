@@ -42,16 +42,20 @@ IFacesBook::IFacesBook()
 	}
 };
 
-auto IFacesBook::hasInterface( const char* interfaceName ) const -> bool
+auto IFacesBook::hasInterface(std::string_view interfaceName) const -> bool
 {
-	return  _book.contains(interfaceName);
+	return  _book.contains(interfaceName.data());
 }
 
-auto IFacesBook::operator[]( const char* interfaceName ) const -> void*
+auto IFacesBook::getInterface(std::string_view interfaceName) const -> void*
 {
-	if (this->hasInterface(interfaceName)) {
-		return _book.at(interfaceName);
-	}
+	std::string interfaceType {interfaceName};
 
-	return nullptr;
-}
+	std::transform(interfaceType.begin(), interfaceType.end(), interfaceType.begin(),
+				   [](unsigned char letter) -> int
+				   {
+					   return ( std::tolower(letter) );
+				   });
+
+	return reinterpret_cast<void*>(_book.at(interfaceType));
+};
