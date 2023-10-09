@@ -4,15 +4,14 @@ project(ifaces_book LANGUAGES CXX)
 set(CMAKE_CONFIGURATION_TYPES Release Debug)
 set(CMAKE_CXX_STANDARD 20)
 
+add_subdirectory(source/utils)
+
 set(SOURCES 
-            source/utils.cpp
             source/IFacesBook.cpp
 )
 
-add_library(ifacesbook OBJECT  ${SOURCES})
+add_library(ifacesbook STATIC  ${SOURCES})
 
-if(${CMAKE_SYSTEM} MATCHES "Linux")
-    set(CMAKE_CXX_FLAGS "-m32")
-endif()
-
+set_target_properties(ifacesbook PROPERTIES PUBLIC_HEADER include/source-engine-interfaces-book/IFacesBook.hpp)
 target_include_directories(ifacesbook PUBLIC include)
+target_link_libraries(ifacesbook PRIVATE ifacesbook-utils)

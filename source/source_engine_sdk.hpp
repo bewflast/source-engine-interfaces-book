@@ -1,5 +1,5 @@
-#ifndef     SE_SDK_HPP
-# define    SE_SDK_HPP
+#ifndef     SOURCE_ENGINE_SDK_HPP
+# define    SOURCE_ENGINE_SDK_HPP
 
 using CreateInterfaceFn 		=  void* (*)(const char* ,int*);
 using InstantiateInterfaceFn 	=  void* (*)();
