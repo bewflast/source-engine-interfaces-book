@@ -38,7 +38,7 @@ void iterateThroughLoadedLibs(libsList& libsNamesList)
 
 	for (const auto& module : modules) {
 		const auto trimmedSharedLibraryName {trimSharedLibName(&module)};
-		if (!trimmedSharedLibraryName.empty()){
+		if (not trimmedSharedLibraryName.empty()){
 			libsNamesList.emplace_back(trimmedSharedLibraryName);
 		}
 	}
@@ -48,7 +48,7 @@ auto GetModHandle(std::string_view &moduleName) -> void*
 {
 	ModuleHandle hMod{GetModuleHandleA(moduleName.data())};
 
-	if (!hMod){
+	if (not hMod){
 		return nullptr;
 	}
 
@@ -59,7 +59,7 @@ auto getSymbol(std::string_view moduleName, std::string_view symbol) -> uintptr_
 {
 	const auto    hMod { static_cast<ModuleHandle>(GetModHandle( moduleName )) };
 
-	if (!hMod) {
+	if (not hMod) {
 		return 0;
 	}
 

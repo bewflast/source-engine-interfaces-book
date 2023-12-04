@@ -4,50 +4,54 @@
 
 #include <utils/utils.hpp>
 
-IFacesBook::IFacesBook()
+#include <memory>
+namespace
+{
+auto buildInterfacesMap() -> std::unordered_map<std::string, void*>
 {
 	const auto    modules { getSharedLibsNames() };
-
 	if (modules.empty()) {
-		return;
+		return {};
 	}
+
+	auto book {std::unordered_map<std::string, void*>{}};
 
 	for (const std::string_view moduleName : modules)
 	{
 
-		if ((moduleName.find("steam") != std::string_view::npos) || (moduleName.find("vstdlib_s") != std::string_view::npos)) {
+		if ((moduleName.find("steam") != std::string_view::npos) or (moduleName.find("vstdlib_s") != std::string_view::npos)) {
 			continue;
 		}
 
 		const auto       s_pInterfaceRegs    { get_s_InterfaceRegs_addr(moduleName) };
-		if (!s_pInterfaceRegs){
+		if (not s_pInterfaceRegs) {
 			continue;
 		}
 
 		auto*   interfaceList       { reinterpret_cast<InterfaceReg*>(*reinterpret_cast<uintptr_t*>(s_pInterfaceRegs)) };
-		for (; interfaceList; interfaceList = interfaceList->m_pNext)
+		for (; nullptr != interfaceList; interfaceList = interfaceList->m_pNext)
 		{
-			for (const auto& elem : interfacesMap)
+			for (const auto& [interfaceType, interfaceVersions] : interfacesMap)
 			{
-				if (!elem.second.contains(interfaceList->m_pName)) {
+				if (not interfaceVersions.contains(interfaceList->m_pName)) {
 					continue;
 				}
-				_book.emplace(	(!hasInterface(elem.first.c_str())		\
-											? elem.first.c_str()		\
+				book.emplace(	(not book.contains(interfaceType)		\
+											? interfaceType				\
 											: interfaceList->m_pName),
-										interfaceList->m_CreateFn());
+								  interfaceList->m_CreateFn());
 			}
 		}
 
 	}
-};
-
-auto IFacesBook::hasInterface(std::string_view interfaceName) const -> bool
-{
-	return  _book.contains(interfaceName.data());
+	return book;
 }
+}  // namespace
 
-auto IFacesBook::getInterface(std::string_view interfaceName) const -> void*
+IFacesBook::IFacesBook() : _book{buildInterfacesMap()}
+{};
+
+auto IFacesBook::findInterface(std::string_view interfaceName) const -> void*
 {
 	std::string interfaceType {interfaceName};
 
@@ -57,5 +61,12 @@ auto IFacesBook::getInterface(std::string_view interfaceName) const -> void*
 					   return ( std::tolower(letter) );
 				   });
 
-	return reinterpret_cast<void*>(_book.at(interfaceType));
+	return _book.contains(interfaceType) ? _book.at(interfaceType) : nullptr;
 };
+
+auto IFacesBook::getInterface(std::string_view interfaceName) -> void*
+{
+	static const std::unique_ptr<IFacesBook> interfacesBookGlobalInstance {new IFacesBook};
+
+	return interfacesBookGlobalInstance->findInterface(interfaceName);
+}

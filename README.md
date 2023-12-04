@@ -11,18 +11,19 @@ You no longer need to guess about which shared library contains target interface
 
 I haven't explored the client binaries yet, but they are coming soon
 
-The only thing you need to do is to make object of `IFacesBook` and get access to target interface through `getInterface` method or overloaded `[]` operator:
+The only thing you need to do is to use static method `getInterface` of `IFacesBook` class:
 
 ```cpp
-  IFacesBook  interfaces;
+  auto* ICvarInterface = static_cast<ICvar*>(IFacesBook::getInterface("ICvar"));
   
-  ICvar* ICvarInterface = interfaces.getInterface<ICvar>();
-  
-  // NOTE: there are some interfaces that have two different versions on client and server side
+  // NOTE: there are some interfaces that have two different versions on client and server side at the same runtime
   // so you should check how target interface is stored
   // EXAMPLE:
-  
-  INetworkStringTableContainer* stringTables_Client { interfaces.getInterface<INetworkStringTableContainer>() };
-  if (interfaces.hasInterface("VEngineClientStringTable001"))
-    stringTablesClient = static_cast<INetworkStringTableContainer*>(interfaces["VEngineClientStringTable001"]);
+
+  auto* stringTablesClient { static_cast<INetworkStringTableContainer*>(IFacesBook::getInterface("INetworkStringTableContainer")) };
+  // if true then that means VEngineServerStringTable001 was found first
+  // while traversing over interfaces list and now stored as INetworkStringTableContainer
+  // but that interface also has second version that exists too at runtime
+  if (IFacesBook::getInterface("VEngineClientStringTable001"))
+	  stringTablesClient = static_cast<INetworkStringTableContainer*>(IFacesBook::getInterface("VEngineClientStringTable001"));
 ```

@@ -22,7 +22,7 @@ auto trimSharedLibName(const SharedLib *lib) -> std::string
 auto addLibName(SharedLib *lib, std::size_t /*size*/, void *data) -> int
 {
 	const auto trimmedSharedLibraryName {trimSharedLibName(lib)};
-	if (!trimmedSharedLibraryName.empty()){
+	if (not trimmedSharedLibraryName.empty()){
 		static_cast<libsList *>(data)->emplace_back(trimmedSharedLibraryName);
 	}
 
@@ -33,7 +33,7 @@ auto GetModHandle(std::string_view &moduleName) -> void*
 {
 	ModuleHandle hMod{dlopen(moduleName.data(), RTLD_NOLOAD | RTLD_NOW)};
 
-	if (!hMod) {
+	if (not hMod) {
 		return nullptr;
 	}
 
@@ -44,7 +44,7 @@ auto getSymbol(std::string_view moduleName, std::string_view symbol) -> uintptr_
 {
 	const auto    hMod { static_cast<ModuleHandle>(GetModHandle( moduleName )) };
 
-	if (!hMod) {
+	if (not hMod) {
 		return 0;
 	}
 
