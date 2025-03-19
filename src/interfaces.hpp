@@ -1,14 +1,16 @@
-#ifndef INTERFACES_HPP
-#define INTERFACES_HPP
+#pragma once
 
-# include <string>
-# include <unordered_map>
-# include <unordered_set>
-
+#include <array>
+#include <string_view>
+#include <unordered_map>
+namespace
+{
+static inline constexpr const auto INTERFACE_VERSIONS_MAX_COUNT {5U};
+}
 using	interfaceType		= std::string;
-using	interfacVersions 	= std::unordered_set<std::string>;
+using	interfaceVersions 	= std::array<std::string_view, INTERFACE_VERSIONS_MAX_COUNT>;
 
-static	const std::unordered_map<interfaceType , interfacVersions>	interfacesMap
+static inline const std::unordered_map<interfaceType , interfaceVersions>	interfacesMap
 {
 		{"ivphysicsdebugoverlay", { "VPhysicsDebugOverlay001"} },
 		{"ibasefilesystem", { "VBaseFileSystem011"} },
@@ -133,5 +135,3 @@ static	const std::unordered_map<interfaceType , interfacVersions>	interfacesMap
 		{"iphysicssurfaceprops", { "VPhysicsSurfaceProps001"} },
 		{"iprocessutils", { "VProcessUtils002","VProcessUtils001"} }
 };
-
-#endif
